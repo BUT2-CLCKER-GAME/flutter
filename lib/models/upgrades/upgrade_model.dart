@@ -2,7 +2,7 @@ import 'dart:math';
 
 import '../player_model.dart';
 
-abstract class Upgrade {
+abstract class UpgradeModel {
   static const double _priceMultiplier = 2;
 
   final PlayerModel player;
@@ -13,7 +13,7 @@ abstract class Upgrade {
   int _level = 0;
   int _price = 0;
 
-  Upgrade(this.player, this._name, this._description, this._unlockLevel, int level, int price) {
+  UpgradeModel(this.player, this._name, this._description, this._unlockLevel, int level, int price) {
     if (level > 0) {
       _level = level;
       _price = (price * pow(_priceMultiplier, level) as double) as int;

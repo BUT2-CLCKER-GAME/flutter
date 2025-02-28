@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../models/player_model.dart';
-import '../models/upgrades/upgrade.dart';
+import '../models/upgrades/upgrade_model.dart';
 import '../services/player_service.dart';
 
 class PlayerViewModel extends ChangeNotifier {
   late PlayerService _playerService;
   late PlayerModel _player;
 
-  Future<bool> initPlayer(int id) async {
-    _playerService = PlayerService.getInstance(id);
+  Future<bool> initPlayer(String username, String password) async {
+    _playerService = PlayerService.getInstance(username, password);
     PlayerModel? player = await _playerService.fetchPlayer();
 
     if (player != null) {
@@ -25,7 +25,7 @@ class PlayerViewModel extends ChangeNotifier {
   String get name => _player.name;
   double get experience => _player.experience;
   int get gold => _player.gold;
-  List<Upgrade> get upgrades => _player.upgrades;
+  List<UpgradeModel> get upgrades => _player.upgrades;
 
   int get clicksPerSecond => _player.clicksPerSecond;
   double get damageMultiplier => _player.damageMultiplier;

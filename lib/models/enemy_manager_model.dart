@@ -21,6 +21,7 @@ class EnemyManagerModel {
     currentEnemy.takeDamage(damage);
     if (currentEnemy.isDead) {
       _currentEnemyId++;
+      PlayerService.getInstance().updatePlayer(currentEnemyId: _currentEnemyId);
       _currentEnemy = _enemyService.fetchEnemy(_currentEnemyId);
     }
   }

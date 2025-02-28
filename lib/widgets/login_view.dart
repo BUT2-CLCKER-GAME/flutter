@@ -1,30 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:passwordfield/passwordfield.dart';
 import 'package:provider/provider.dart';
 
+import '../services/player_service.dart';
 import '../viewmodels/player_view_model.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
 
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   void _validateInput(BuildContext context, PlayerViewModel playerViewModel) async {
-    int? value = int.tryParse(_controller.text);
-    if (value != null) {
-      if (await playerViewModel.initPlayer(value)) {
-        if (context.mounted) {
-          Navigator.pushReplacementNamed(context, '/game');
-        }
-      }
-      else if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Indice invalide')));
+    print('${_usernameController.text}:${_passwordController.text}');
+    if (await playerViewModel.initPlayer(_usernameController.text, _passwordController.text)) {
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(context, '/game');
       }
     }
     else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Veuillez entrer un nombre valide.')));
+        bool? confirmed = await showConfirmationDialog(context, "Le compte n'existe pas, voulez vous le créer ?");
+        if (confirmed == true) {
+          if (await PlayerService.getInstance().register(_usernameController.text, _passwordController.text)) {
+            if (context.mounted) {
+              _validateInput(context, playerViewModel);
+            }
+          }
+          else if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la création du compte')));
+          }
+        }
+        else {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Identifiants invalides')));
+          }
+        }
       }
     }
+  }
+
+  Future<bool?> showConfirmationDialog(BuildContext context, String message) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirmation"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text("Non"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text("Oui"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -38,11 +73,20 @@ class LoginView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Entrez l\'id du joueur:'),
+            Text('Nom d\'utilisateur:'),
             TextField(
-              controller: _controller,
-              keyboardType: TextInputType.number,
+              controller: _usernameController,
+              keyboardType: TextInputType.name,
               decoration: InputDecoration(border: OutlineInputBorder()),
+            ),
+            Text('Mot de passe:'),
+            PasswordField(
+              controller: _passwordController,
+              passwordConstraint: r'.+',
+              errorMessage: 'Le mot de passe ne peut pas être vide',
+              border: PasswordBorder(
+                border: OutlineInputBorder(),
+              ),
             ),
             SizedBox(height: 10),
             ElevatedButton(

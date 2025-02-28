@@ -7,11 +7,13 @@ import 'views/game_view.dart';
 import 'widgets/login_view.dart';
 
 void main() {
+  PlayerViewModel player = PlayerViewModel();
+
   runApp(
     MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => PlayerViewModel()),
-          ChangeNotifierProvider(create: (context) => EnemyManagerViewModel())
+          ChangeNotifierProvider(create: (context) => player),
+          ChangeNotifierProvider(create: (context) => EnemyManagerViewModel(player))
         ],
       child: MyApp(),
     )

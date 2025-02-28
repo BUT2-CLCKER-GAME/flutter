@@ -12,7 +12,7 @@ class EnemyService extends ApiService {
       }
     }
     catch (e) {
-      print("Erreur lors de la récupération du joueur: $e");
+      print("Erreur lors de la récupération de l'ennemis: $e");
     }
     return null;
   }

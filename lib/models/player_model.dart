@@ -1,6 +1,6 @@
 import 'package:clcker/services/player_service.dart';
 
-import 'upgrades/upgrade.dart';
+import 'upgrades/upgrade_model.dart';
 
 class PlayerModel {
   final PlayerService _playerService;
@@ -8,7 +8,7 @@ class PlayerModel {
   final String _name;
   double _experience;
   int _gold;
-  final List<Upgrade> _upgrades;
+  final List<UpgradeModel> _upgrades;
 
   int _clicksPerSecond;
   double _damageMultiplier;
@@ -21,7 +21,7 @@ class PlayerModel {
   String get name => _name;
   double get experience => _experience;
   int get gold => _gold;
-  List<Upgrade> get upgrades => _upgrades;
+  List<UpgradeModel> get upgrades => _upgrades;
 
   int get clicksPerSecond => _clicksPerSecond;
   double get damageMultiplier => _damageMultiplier;
@@ -53,7 +53,7 @@ class PlayerModel {
   bool deductGold(int amount) {
     if (_gold - amount >= 0) {
       _gold -= amount;
-      _playerService.updateGold(_gold);
+      _playerService.updatePlayer(gold: _gold, experience: experience);
       return true;
     }
     return false;
@@ -62,7 +62,7 @@ class PlayerModel {
   void addGold(int amount) {
     if (amount >= 0) {
       _gold += (amount * _goldMultiplier) as int;
-      _playerService.updateGold(_gold);
+      _playerService.updatePlayer(gold: _gold, experience: experience);
     }
   }
 
