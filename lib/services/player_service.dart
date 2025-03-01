@@ -1,9 +1,12 @@
+import 'upgrade_service.dart';
 import '../models/upgrades/upgrade_model.dart';
 import '../models/player_model.dart';
 import 'api_service.dart';
 
 class PlayerService extends ApiService {
   static PlayerService? _instance;
+
+  late final UpgradeService _upgradeService;
 
   final String _username;
   final String _password;
@@ -23,9 +26,12 @@ class PlayerService extends ApiService {
     return _instance!;
   }
 
+  UpgradeService get upgradeService => _upgradeService;
+
+  String get token => _token;
   int get enemyId => _enemyId;
 
-  Future<String?> getToken(String username, String password) async {
+  Future<String?> _getToken(String username, String password) async {
     try {
       final dynamic data = await post('auth/login', {
         "username": username,
@@ -61,15 +67,19 @@ class PlayerService extends ApiService {
 
   Future<PlayerModel?> fetchPlayer() async {
     try {
-      String? token = await getToken(_username, _password);
+      String? token = await _getToken(_username, _password);
       if (token != null) {
         _token = token;
-
         final dynamic data = await get('players/me', token: _token);
-        // TODO: Fetch upgrades
+
         if (data != null) {
           _enemyId = data['current_enemy_id'];
-          return PlayerModel(this, data['username'], data['exp'].toDouble(), data['gold'], []);
+
+          PlayerModel player = PlayerModel(this, data['username'], data['exp'].toDouble(), data['gold']);
+          _upgradeService = UpgradeService(player);
+          await _upgradeService.fetchUpgrades(_token);
+
+          return player;
         }
       }
     }
@@ -87,7 +97,6 @@ class PlayerService extends ApiService {
         if (gold != null) "gold": gold,
         if (experience != null) "exp": experience
       }, token: _token);
-      // TODO: Add upgrades to body
     }
     catch (e) {
       print("Erreur lors de la mise à jour de l'or: $e");

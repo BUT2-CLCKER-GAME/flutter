@@ -29,15 +29,16 @@ class ApiService {
     }
   }
 
-  Future<dynamic> post(String endpoint, Map<String, dynamic> data) async {
+  Future<dynamic> post(String endpoint, Map<String, dynamic>? data, {String? token}) async {
     try {
       final uri = Uri.parse('$api$endpoint');
       final response = await http.post(
         uri,
         headers: {
           'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(data),
+        body: data != null ? jsonEncode(data) : null,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

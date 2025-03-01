@@ -1,11 +1,13 @@
-import 'dart:math';
+import 'package:clcker/services/upgrade_service.dart';
 
 import '../player_model.dart';
 
 abstract class UpgradeModel {
-  static const double _priceMultiplier = 2;
-
   final PlayerModel player;
+  late final UpgradeService _upgradeService = UpgradeService(player);
+
+  final int _id;
+  final int _typeId;
 
   final String _name;
   final String _description;
@@ -13,15 +15,9 @@ abstract class UpgradeModel {
   int _level = 0;
   int _price = 0;
 
-  UpgradeModel(this.player, this._name, this._description, this._unlockLevel, int level, int price) {
-    if (level > 0) {
-      _level = level;
-      _price = (price * pow(_priceMultiplier, level) as double) as int;
+  UpgradeModel(this.player, this._id, this._typeId, this._name, this._description, this._unlockLevel, this._level, this._price) {
+    if (_level > 0) {
       applyUpgrade(_level);
-    }
-    else {
-      _level = 0;
-      _price = price;
     }
   }
 
@@ -31,17 +27,22 @@ abstract class UpgradeModel {
   int get price => _price;
   int get level => _level;
 
-  void buy() {
-    if (player.deductGold(_price)) {
-      applyUpgrade(1);
-      _level = 1;
-    }
+  bool isType(int typeId) {
+    return _typeId == typeId;
   }
 
-  void upgrade() {
-    _level++;
-    _price = (_price * _priceMultiplier) as int;
+  Future<void> buy() async {
     applyUpgrade(1);
+
+    _level = 1;
+    _price = await _upgradeService.saveUpgrade(player.token, _id) ?? 0;
+  }
+
+  Future<void> upgrade() async {
+    applyUpgrade(1);
+
+    _level++;
+    _price = await _upgradeService.saveUpgrade(player.token, _id) ?? 0;
   }
 
   void applyUpgrade(int level);

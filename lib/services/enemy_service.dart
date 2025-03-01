@@ -1,5 +1,5 @@
-import 'package:clcker/models/enemy_model.dart';
-import 'package:clcker/services/api_service.dart';
+import '../models/enemy_model.dart';
+import '../services/api_service.dart';
 
 class EnemyService extends ApiService {
   const EnemyService();

@@ -22,7 +22,8 @@ class EnemyWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Name: ${enemyViewModel.name}"
+                enemyViewModel.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
                 "${enemyViewModel.health}/${enemyViewModel.maxHealth}"

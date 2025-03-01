@@ -1,3 +1,4 @@
+import 'package:clcker/services/upgrade_service.dart';
 import 'package:flutter/material.dart';
 
 import '../models/player_model.dart';
@@ -22,13 +23,18 @@ class PlayerViewModel extends ChangeNotifier {
     return false;
   }
 
+  UpgradeService get upgradeService => _playerService.upgradeService;
+
   String get name => _player.name;
   double get experience => _player.experience;
+  int get level => _player.level;
   int get gold => _player.gold;
   List<UpgradeModel> get upgrades => _player.upgrades;
 
   int get clicksPerSecond => _player.clicksPerSecond;
   double get damageMultiplier => _player.damageMultiplier;
+  double get goldMultiplier => _player.goldMultiplier;
+  double get experienceMultiplier => _player.experienceMultiplier;
 
   bool deductGold(int amount) {
     bool result = _player.deductGold(amount);

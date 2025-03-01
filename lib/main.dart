@@ -1,10 +1,10 @@
-import 'package:clcker/viewmodels/enemy_manager_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'viewmodels/enemy_manager_view_model.dart';
 import 'viewmodels/player_view_model.dart';
 import 'views/game_view.dart';
-import 'widgets/login_view.dart';
+import 'views/login_view.dart';
 
 void main() {
   PlayerViewModel player = PlayerViewModel();

@@ -15,6 +15,8 @@ class EnemyManagerModel {
   Future<EnemyModel> get currentEnemy async => (await _currentEnemy)!;
   int get currentEnemyId => _currentEnemyId;
 
+  Future<int> get maxHealth async => (await _currentEnemy)!.maxHealth;
+
   Future<void> takeDamage(int damage) async {
     EnemyModel currentEnemy = (await _currentEnemy)!;
 

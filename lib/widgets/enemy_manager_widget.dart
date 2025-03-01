@@ -1,8 +1,8 @@
-import 'package:clcker/widgets/enemy_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/enemy_manager_view_model.dart';
+import 'enemy_widget.dart';
 
 class EnemyManagerWidget extends StatelessWidget {
   const EnemyManagerWidget({super.key});

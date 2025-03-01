@@ -12,7 +12,6 @@ class LoginView extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
 
   void _validateInput(BuildContext context, PlayerViewModel playerViewModel) async {
-    print('${_usernameController.text}:${_passwordController.text}');
     if (await playerViewModel.initPlayer(_usernameController.text, _passwordController.text)) {
       if (context.mounted) {
         Navigator.pushReplacementNamed(context, '/game');

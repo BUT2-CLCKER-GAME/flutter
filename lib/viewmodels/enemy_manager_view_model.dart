@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:clcker/models/enemy_manager_model.dart';
-import 'package:clcker/viewmodels/enemy_view_model.dart';
-import 'package:clcker/viewmodels/player_view_model.dart';
-import 'package:flutter/material.dart';
+import '../models/enemy_manager_model.dart';
+import 'enemy_view_model.dart';
+import 'player_view_model.dart';
 
 class EnemyManagerViewModel extends ChangeNotifier {
   final PlayerViewModel _player;
@@ -43,8 +43,12 @@ class EnemyManagerViewModel extends ChangeNotifier {
 
   void _takeDamage(int damage) async {
     int lastId = _enemyManagerModel.currentEnemyId;
+    int maxHealth = await _enemyManagerModel.maxHealth;
     await _enemyManagerModel.takeDamage((damage * _player.damageMultiplier).round());
+    _player.addExperience(damage * _player.damageMultiplier * _player.experienceMultiplier);
+
     if (lastId != _enemyManagerModel.currentEnemyId) {
+      _player.addGold((maxHealth * _player.goldMultiplier).round());
       _initEnemy();
     }
   }
