@@ -21,6 +21,8 @@ class LeaderboardViewModel extends ChangeNotifier {
     errorMessage = null;
     notifyListeners();
 
+    await Future.delayed(const Duration(seconds: 1));
+
     try {
       leaderboard = await _service.fetchLeaderboard(page: page, perPage: perPage);
       currentPage = page;

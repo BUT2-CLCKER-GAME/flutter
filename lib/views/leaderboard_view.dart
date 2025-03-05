@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/leaderboard_view_model.dart';
+import '../widgets/leaderboard/leaderboard_pagination.dart';
+import '../widgets/leaderboard/leaderboard_status.dart';
+import '../widgets/leaderboard/leaderboard_tile.dart';
 
 class LeaderboardView extends StatelessWidget {
   const LeaderboardView({super.key});
@@ -14,17 +17,17 @@ class LeaderboardView extends StatelessWidget {
       ),
       body: Column(
         children: [
+          Consumer<LeaderboardViewModel>(
+            builder: (context, viewModel, child) {
+              return LeaderboardStatus(
+                isLoading: viewModel.isLoading,
+                errorMessage: viewModel.errorMessage,
+              );
+            },
+          ),
           Expanded(
             child: Consumer<LeaderboardViewModel>(
               builder: (context, viewModel, child) {
-                if (viewModel.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (viewModel.errorMessage != null) {
-                  return Center(child: Text(viewModel.errorMessage!));
-                }
-
                 if (viewModel.leaderboard == null || viewModel.leaderboard!.players.isEmpty) {
                   return const Center(child: Text("Aucun joueur trouvé."));
                 }
@@ -33,13 +36,7 @@ class LeaderboardView extends StatelessWidget {
                   itemCount: viewModel.leaderboard!.players.length,
                   itemBuilder: (context, index) {
                     final player = viewModel.leaderboard!.players[index];
-                    return ListTile(
-                      title: Text(player.username),
-                      subtitle: Text("EXP: ${player.exp}, Gold: ${player.gold}"),
-                      trailing: player.currentEnemyId != null
-                          ? Text("Enemy ID: ${player.currentEnemyId}")
-                          : const Text("No enemy"),
-                    );
+                    return LeaderboardPlayerTile(player: player);
                   },
                 );
               },
@@ -47,21 +44,11 @@ class LeaderboardView extends StatelessWidget {
           ),
           Consumer<LeaderboardViewModel>(
             builder: (context, viewModel, child) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: viewModel.currentPage > 1 ? viewModel.previousPage : null,
-                  ),
-                  Text("Page ${viewModel.currentPage} / ${viewModel.leaderboard?.pages ?? 1}"),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward),
-                    onPressed: viewModel.leaderboard != null && viewModel.currentPage < viewModel.leaderboard!.pages
-                        ? viewModel.nextPage
-                        : null,
-                  ),
-                ],
+              return LeaderboardPagination(
+                currentPage: viewModel.currentPage,
+                totalPages: viewModel.leaderboard?.pages ?? 1,
+                onPreviousPage: viewModel.previousPage,
+                onNextPage: viewModel.nextPage,
               );
             },
           ),
@@ -70,4 +57,3 @@ class LeaderboardView extends StatelessWidget {
     );
   }
 }
-
