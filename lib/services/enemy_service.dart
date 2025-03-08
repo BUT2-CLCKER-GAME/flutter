@@ -8,7 +8,7 @@ class EnemyService extends ApiService {
     try {
       final dynamic data = await get('enemies/$id');
       if (data != null) {
-        return EnemyModel(data['name'], data['health']);
+        return EnemyModel(data['name'], data['health'], data['image_url']);
       }
     }
     catch (e) {

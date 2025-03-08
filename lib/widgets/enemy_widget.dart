@@ -12,25 +12,52 @@ class EnemyWidget extends StatelessWidget {
     EnemyManagerViewModel enemyManagerViewModel = context.watch<EnemyManagerViewModel>();
     EnemyViewModel enemyViewModel = context.watch<EnemyViewModel>();
 
-    return GestureDetector(
-      onTap: () => enemyManagerViewModel.onClick(1),
-      child: Card(
-        margin: EdgeInsets.all(16),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Nom de l'ennemi
+          Text(
+            enemyViewModel.name,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16),
+
+          // Barre de vie
+          Stack(
             children: [
-              Text(
-                enemyViewModel.name,
-                style: TextStyle(fontWeight: FontWeight.bold),
+              LinearProgressIndicator(
+                value: enemyViewModel.health / enemyViewModel.maxHealth,
+                minHeight: 20,
               ),
-              Text(
-                "${enemyViewModel.health}/${enemyViewModel.maxHealth}"
+              Center(
+                child: Text(
+                  "${enemyViewModel.health}/${enemyViewModel.maxHealth}",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
-        ),
+          SizedBox(height: 16),
+
+          // Image de l'ennemi
+          GestureDetector(
+            onTap: () => enemyManagerViewModel.onClick(1),
+            child: Image.asset(
+              enemyViewModel.imageUrl,
+              height: 100,
+              width: 100,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
       ),
     );
   }
