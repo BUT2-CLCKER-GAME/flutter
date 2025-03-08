@@ -92,6 +92,11 @@ class LoginView extends StatelessWidget {
               onPressed: () => _validateInput(context, playerViewModel),
               child: Text('Valider'),
             ),
+            SizedBox(height: 10),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/signup'),
+              child: Text("Créer un compte", style: TextStyle(color: Colors.blue)),
+            ),
           ],
         ),
       ),

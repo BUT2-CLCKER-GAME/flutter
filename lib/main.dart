@@ -1,5 +1,6 @@
 import 'package:clcker/viewmodels/leaderboard_view_model.dart';
 import 'package:clcker/views/leaderboard_view.dart';
+import 'package:clcker/views/signuppage_vview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,14 +13,14 @@ void main() {
   PlayerViewModel player = PlayerViewModel();
 
   runApp(
-    MultiProvider(
+      MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => player),
           ChangeNotifierProvider(create: (context) => EnemyManagerViewModel(player)),
           ChangeNotifierProvider(create: (context) => LeaderboardViewModel()),
         ],
-      child: MyApp(),
-    )
+        child: MyApp(),
+      )
   );
 }
 
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => LoginView(),
         '/game': (context) => GameView(),
         '/leaderboard': (context) => LeaderboardView(),
+        '/signup': (context) => SignupPage(),
       },
       debugShowCheckedModeBanner: false,
     );
