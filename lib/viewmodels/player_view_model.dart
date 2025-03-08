@@ -9,8 +9,22 @@ class PlayerViewModel extends ChangeNotifier {
   late PlayerService _playerService;
   late PlayerModel _player;
 
-  Future<bool> initPlayer(String username, String password) async {
-    _playerService = PlayerService.getInstance(username, password);
+  Future<bool> initPlayerUsername(String username, String password) async {
+    _playerService = PlayerService.getInstance(null, username, password);
+    PlayerModel? player = await _playerService.fetchPlayer();
+
+    if (player != null) {
+      _player = player;
+      notifyListeners();
+      return true;
+    }
+
+    notifyListeners();
+    return false;
+  }
+
+  Future<bool> initPlayerToken(String token) async {
+    _playerService = PlayerService.getInstance(token);
     PlayerModel? player = await _playerService.fetchPlayer();
 
     if (player != null) {

@@ -1,3 +1,5 @@
+import 'package:clcker/services/storage_service.dart';
+
 import 'upgrade_service.dart';
 import '../models/upgrades/upgrade_model.dart';
 import '../models/player_model.dart';
@@ -10,25 +12,30 @@ class PlayerService extends ApiService {
 
   final String _username;
   final String _password;
-  late final String _token;
+  String? _token;
 
   late int _enemyId;
 
-  PlayerService._internal(this._username, this._password);
+  PlayerService._internal(this._token, this._username, this._password);
 
-  static PlayerService getInstance([String? username, String? password]) {
+  static PlayerService getInstance([String? token, String? username, String? password]) {
     if (_instance == null) {
-      if (username == null || password == null) {
-        throw Exception("PlayerService n'a pas encore été initialisé avec un playerId.");
+      if (token != null) {
+        _instance = PlayerService._internal(token, '', '');
       }
-      _instance = PlayerService._internal(username, password);
+      else {
+        if (username == null || password == null) {
+          throw Exception("PlayerService n'a pas encore été initialisé avec un playerId.");
+        }
+        _instance = PlayerService._internal(null, username, password);
+      }
     }
     return _instance!;
   }
 
   UpgradeService get upgradeService => _upgradeService;
 
-  String get token => _token;
+  String get token => _token!;
   int get enemyId => _enemyId;
 
   Future<String?> _getToken(String username, String password) async {
@@ -38,6 +45,7 @@ class PlayerService extends ApiService {
         "password": password
       });
       if (data != null) {
+        StorageService.saveToken(data['token']);
         return data['token'];
       }
     }
@@ -67,20 +75,26 @@ class PlayerService extends ApiService {
 
   Future<PlayerModel?> fetchPlayer() async {
     try {
-      String? token = await _getToken(_username, _password);
-      if (token != null) {
-        _token = token;
-        final dynamic data = await get('players/me', token: _token);
-
-        if (data != null) {
-          _enemyId = data['current_enemy_id'];
-
-          PlayerModel player = PlayerModel(this, data['username'], data['exp'].toDouble(), data['gold']);
-          _upgradeService = UpgradeService(player);
-          await _upgradeService.fetchUpgrades(_token);
-
-          return player;
+      if (_token == null) {
+        String? token = await _getToken(_username, _password);
+        if (token != null) {
+          _token = token;
         }
+        else {
+          return null;
+        }
+      }
+
+      final dynamic data = await get('players/me', token: _token);
+
+      if (data != null) {
+        _enemyId = data['current_enemy_id'];
+
+        PlayerModel player = PlayerModel(this, data['username'], data['exp'].toDouble(), data['gold']);
+        _upgradeService = UpgradeService(player);
+        await _upgradeService.fetchUpgrades(_token!);
+
+        return player;
       }
     }
     catch (e) {

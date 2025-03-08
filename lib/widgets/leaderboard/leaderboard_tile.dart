@@ -13,7 +13,7 @@ class LeaderboardPlayerTile extends StatelessWidget {
       title: Text("${player.rank}. ${player.username}"), // Affichage du rang avant le nom
       subtitle: Text("EXP: ${player.exp}, Gold: ${player.gold}"),
       trailing: player.enemy != null
-          ? Text("Enemy: ${player.enemy!.name} (ID: ${player.enemy!.id})")
+          ? Text("Enemy: ${player.enemy!.name}")
           : const Text("No enemy"),
     );
   }

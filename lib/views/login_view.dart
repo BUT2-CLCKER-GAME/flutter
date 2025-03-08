@@ -3,43 +3,71 @@ import 'package:passwordfield/passwordfield.dart';
 import 'package:provider/provider.dart';
 
 import '../services/player_service.dart';
+import '../services/storage_service.dart';
 import '../viewmodels/player_view_model.dart';
 
-class LoginView extends StatelessWidget {
-  LoginView({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _validateInput(BuildContext context, PlayerViewModel playerViewModel) async {
-    if (await playerViewModel.initPlayer(_usernameController.text, _passwordController.text)) {
-      if (context.mounted) {
+  bool _isChecking = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfLoggedIn();
+  }
+
+  void _checkIfLoggedIn() async {
+    final String? token = await StorageService.getToken();
+    if (token != null) {
+      if (mounted) {
+        PlayerViewModel playerViewModel = Provider.of<PlayerViewModel>(context, listen: false);
+        if (await playerViewModel.initPlayerToken(token) && mounted) {
+          Navigator.pushReplacementNamed(context, '/game');
+          return;
+        }
+      }
+    }
+    setState(() {
+      _isChecking = false;
+    });
+  }
+
+  void _validateInput(PlayerViewModel playerViewModel) async {
+    if (await playerViewModel.initPlayerUsername(_usernameController.text, _passwordController.text)) {
+      if (mounted) {
         Navigator.pushReplacementNamed(context, '/game');
       }
     }
     else {
-      if (context.mounted) {
-        bool? confirmed = await showConfirmationDialog(context, "Le compte n'existe pas, voulez vous le créer ?");
-        if (confirmed == true) {
-          if (await PlayerService.getInstance().register(_usernameController.text, _passwordController.text)) {
-            if (context.mounted) {
-              _validateInput(context, playerViewModel);
-            }
-          }
-          else if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la création du compte')));
+      bool? confirmed = await showConfirmationDialog("Le compte n'existe pas, voulez vous le créer ?");
+      if (confirmed == true) {
+        if (await PlayerService.getInstance().register(_usernameController.text, _passwordController.text)) {
+          if (context.mounted) {
+            _validateInput(playerViewModel);
           }
         }
-        else {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Identifiants invalides')));
-          }
+        else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la création du compte')));
+        }
+      }
+      else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Identifiants invalides')));
         }
       }
     }
   }
 
-  Future<bool?> showConfirmationDialog(BuildContext context, String message) async {
+  Future<bool?> showConfirmationDialog(String message) async {
     return showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
@@ -63,6 +91,14 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (_isChecking) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     PlayerViewModel playerViewModel = context.watch<PlayerViewModel>();
 
     return Scaffold(
@@ -89,7 +125,7 @@ class LoginView extends StatelessWidget {
             ),
             SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () => _validateInput(context, playerViewModel),
+              onPressed: () => _validateInput(playerViewModel),
               child: Text('Valider'),
             ),
           ],
