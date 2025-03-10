@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String api = "http://91.121.253.242:20101/";
+  static const String api = "http://dev.api.flutter.reaper.mx/";
 
   const ApiService();
 
@@ -15,6 +15,7 @@ class ApiService {
       };
 
       final response = await http.get(uri, headers: headers);
+
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);

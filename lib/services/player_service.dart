@@ -56,6 +56,8 @@ class PlayerService extends ApiService {
     return null;
   }
 
+
+
   Future<bool> register(String username, String password) async {
     try {
       final dynamic data = await post('auth/register', {
@@ -115,5 +117,10 @@ class PlayerService extends ApiService {
     catch (e) {
       print("Erreur lors de la mise à jour de l'or: $e");
     }
+  }
+
+  void disconnect() {
+    StorageService.deleteToken();
+    _instance = null;
   }
 }
