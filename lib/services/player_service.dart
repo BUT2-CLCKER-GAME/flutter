@@ -108,7 +108,7 @@ class PlayerService extends ApiService {
 
   Future<void> updatePlayer({int? currentEnemyId, int? gold, double? experience, List<UpgradeModel>? upgrades}) async {
     try {
-      await patch('players/me/', {
+      await patch('players/me', {
         if (currentEnemyId != null) "current_enemy_id": currentEnemyId,
         if (gold != null) "gold": gold,
         if (experience != null) "exp": experience

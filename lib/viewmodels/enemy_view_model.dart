@@ -8,7 +8,9 @@ class EnemyViewModel extends ChangeNotifier {
   EnemyViewModel(this._enemy);
 
   String get name => _enemy.name;
-  String get imageUrl => '';
+
+  String get imageUrl => 'assets/${_enemy.imageUrl}';
+
   int get maxHealth => _enemy.maxHealth;
   int get health => _enemy.health;
 

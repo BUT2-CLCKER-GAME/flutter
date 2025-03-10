@@ -7,20 +7,16 @@ import 'player_view_model.dart';
 
 class EnemyManagerViewModel extends ChangeNotifier {
   final PlayerViewModel _player;
-
   final EnemyManagerModel _enemyManagerModel;
   EnemyViewModel? _currentEnemy;
 
   late Timer autoClickerTimer;
   double clicksBuffer = 0.0;
 
-  EnemyManagerViewModel(this._player) :
-      _enemyManagerModel = EnemyManagerModel()
-  {
+  EnemyManagerViewModel(this._player) : _enemyManagerModel = EnemyManagerModel() {
     _initEnemy();
     autoClickerTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       clicksBuffer += _player.clicksPerSecond / 10;
-
       int clicksToPerform = clicksBuffer.floor();
       if (clicksToPerform > 0) {
         onClick(clicksToPerform);

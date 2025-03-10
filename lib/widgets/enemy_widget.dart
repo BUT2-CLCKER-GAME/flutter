@@ -47,7 +47,7 @@ class EnemyWidget extends StatelessWidget {
 
           GestureDetector(
             onTap: () => enemyManagerViewModel.onClick(1),
-            child: Image.network(
+            child: Image.asset(
               enemyViewModel.imageUrl,
               height: 100,
               width: 100,

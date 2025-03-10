@@ -128,6 +128,11 @@ class _LoginViewState extends State<LoginView> {
               onPressed: () => _validateInput(playerViewModel),
               child: Text('Valider'),
             ),
+            SizedBox(height: 10),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/signup'),
+              child: Text("Créer un compte", style: TextStyle(color: Colors.blue)),
+            ),
           ],
         ),
       ),
