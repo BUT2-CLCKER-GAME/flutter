@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:passwordfield/passwordfield.dart';
 import '../services/player_service.dart';
 
-class SignupPage extends StatelessWidget {
-  SignupPage({super.key});
+class RegisterView extends StatelessWidget {
+  RegisterView({super.key});
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();

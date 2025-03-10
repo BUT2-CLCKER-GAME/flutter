@@ -11,11 +11,11 @@ abstract class UpgradeModel {
 
   final String _name;
   final String _description;
-  final int _unlockLevel;
+  final int _unlockExp;
   int _level = 0;
   int _price = 0;
 
-  UpgradeModel(this.player, this._id, this._typeId, this._name, this._description, this._unlockLevel, this._level, this._price) {
+  UpgradeModel(this.player, this._id, this._typeId, this._name, this._description, this._unlockExp, this._level, this._price) {
     if (_level > 0) {
       applyUpgrade(_level);
     }
@@ -23,7 +23,7 @@ abstract class UpgradeModel {
 
   String get name => _name;
   String get description => _description;
-  int get unlockLevel => _unlockLevel;
+  int get unlockExp => _unlockExp;
   int get price => _price;
   int get level => _level;
 
@@ -32,17 +32,23 @@ abstract class UpgradeModel {
   }
 
   Future<void> buy() async {
-    applyUpgrade(1);
+    int? cost = await _upgradeService.saveUpgrade(player.token, _id);
+    if (cost != null) {
+      applyUpgrade(1);
 
-    _level = 1;
-    _price = await _upgradeService.saveUpgrade(player.token, _id) ?? 0;
+      _level = 1;
+      _price = cost;
+    }
   }
 
   Future<void> upgrade() async {
-    applyUpgrade(1);
+    int? cost = await _upgradeService.saveUpgrade(player.token, _id);
+    if (cost != null) {
+      applyUpgrade(1);
 
-    _level++;
-    _price = await _upgradeService.saveUpgrade(player.token, _id) ?? 0;
+      _level++;
+      _price = cost;
+    }
   }
 
   void applyUpgrade(int level);

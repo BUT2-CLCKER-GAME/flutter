@@ -10,7 +10,7 @@ class UpgradeViewModel extends ChangeNotifier {
 
   String get name => _upgrade.name;
   String get description => _upgrade.description;
-  int get unlockLevel => _upgrade.unlockLevel;
+  int get unlockExp => _upgrade.unlockExp;
   int get price => _upgrade.price;
   int get level => _upgrade.level;
 

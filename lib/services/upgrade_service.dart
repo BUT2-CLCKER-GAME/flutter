@@ -1,3 +1,7 @@
+import 'package:clcker/models/upgrades/autoclcker_upgrade_model.dart';
+import 'package:clcker/models/upgrades/experience_multiplier_upgrade_model.dart';
+import 'package:clcker/models/upgrades/gold_multiplier_upgrade_model.dart';
+
 import '../services/api_service.dart';
 import '../models/player_model.dart';
 import '../models/upgrades/upgrade_model.dart';
@@ -12,6 +16,12 @@ class UpgradeService extends ApiService {
     switch (data['type']['id']) {
       case 1:
         return DamageMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase'].toDouble());
+      case 2:
+        return ExperienceMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase'].toDouble());
+      case 3:
+        return AutoclckerUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase']);
+      case 4:
+        return GoldMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase'].toDouble());
     }
     return null;
   }
@@ -52,10 +62,10 @@ class UpgradeService extends ApiService {
 
   Future<int?> saveUpgrade(String token, int upgradeId) async {
     try {
-      final dynamic data = await post('/players/me/upgrades/$upgradeId', null, token: token);
+      final dynamic data = await post('players/me/upgrades/$upgradeId', null, token: token);
 
       if (data != null) {
-        return data['cost'];
+        return data['cost'] as int?;
       }
     }
     catch (e) {

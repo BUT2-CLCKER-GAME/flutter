@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../viewmodels/player_view_model.dart';
 import '../viewmodels/settings_view_model.dart';
 
 class SettingsView extends StatelessWidget {
@@ -8,8 +9,19 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var settingsViewModel = context.watch<SettingsViewModel>();
+    SettingsViewModel settings = context.watch<SettingsViewModel>();
+    PlayerViewModel player = context.watch<PlayerViewModel>();
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Paramètres'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/game');
+          },
+        ),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -17,23 +29,16 @@ class SettingsView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Settings',
+                'Connecté en tant que ${player.name}.',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/game');
-                },
-                child: Text('Retour'),
-              ),
               SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
-                  settingsViewModel.disconnect();
+                  settings.disconnect();
                   Navigator.pushReplacementNamed(context, '/');
                 },
                 child: Text('Deconnexion'),

@@ -14,7 +14,7 @@ class UpgradeWidget extends StatelessWidget {
     PlayerViewModel player = context.watch<PlayerViewModel>();
     UpgradeViewModel upgrade = context.watch<UpgradeViewModel>();
 
-    bool isUnlocked = player.level >= upgrade.unlockLevel;
+    bool isUnlocked = player.experience >= upgrade.unlockExp;
     bool canAfford = player.gold >= upgrade.price;
     bool isMaxLevel = upgrade.level >= maxLevel;
     bool isBought = upgrade.level > 0;

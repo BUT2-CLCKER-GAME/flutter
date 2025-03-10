@@ -41,7 +41,6 @@ class PlayerViewModel extends ChangeNotifier {
 
   String get name => _player.name;
   double get experience => _player.experience;
-  int get level => _player.level;
   int get gold => _player.gold;
   List<UpgradeModel> get upgrades => _player.upgrades;
 

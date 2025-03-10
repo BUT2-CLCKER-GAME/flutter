@@ -5,7 +5,7 @@ class StorageService {
   static const _storage = FlutterSecureStorage();
 
   static Future<String?> getToken() async {
-    final value = await _storage.read(key: _tokenKey);
+    final String? value = await _storage.read(key: _tokenKey);
     return value;
   }
 

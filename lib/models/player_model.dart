@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import '../services/player_service.dart';
 import 'upgrades/upgrade_model.dart';
 
@@ -23,7 +21,6 @@ class PlayerModel {
 
   String get name => _name;
   double get experience => _experience;
-  int get level => pow(2, _experience).floor();
   int get gold => _gold;
   List<UpgradeModel> get upgrades => _upgrades;
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:passwordfield/passwordfield.dart';
 import 'package:provider/provider.dart';
 
-import '../services/player_service.dart';
 import '../services/storage_service.dart';
 import '../viewmodels/player_view_model.dart';
 
@@ -42,51 +41,12 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _validateInput(PlayerViewModel playerViewModel) async {
-    if (await playerViewModel.initPlayerUsername(_usernameController.text, _passwordController.text)) {
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/game');
-      }
+    if (await playerViewModel.initPlayerUsername(_usernameController.text, _passwordController.text) && mounted) {
+      Navigator.pushReplacementNamed(context, '/game');
     }
-    else {
-      bool? confirmed = await showConfirmationDialog("Le compte n'existe pas, voulez vous le créer ?");
-      if (confirmed == true) {
-        if (await PlayerService.getInstance().register(_usernameController.text, _passwordController.text)) {
-          if (context.mounted) {
-            _validateInput(playerViewModel);
-          }
-        }
-        else if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la création du compte')));
-        }
-      }
-      else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Identifiants invalides')));
-        }
-      }
+    else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Identifiants invalides')));
     }
-  }
-
-  Future<bool?> showConfirmationDialog(String message) async {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Confirmation"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text("Non"),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text("Oui"),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
