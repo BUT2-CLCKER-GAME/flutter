@@ -9,19 +9,15 @@ class EnemyManagerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EnemyManagerViewModel enemyManagerViewModel = Provider.of<EnemyManagerViewModel>(context);
+    EnemyManagerViewModel enemyManagerViewModel = context.watch<EnemyManagerViewModel>();
 
-    Widget widget;
-    if (enemyManagerViewModel.currentEnemy != null) {
-      widget = EnemyWidget();
-    }
-    else {
-      widget = CircularProgressIndicator();
+    if (enemyManagerViewModel.end) {
+      Navigator.pushReplacementNamed(context, '/congratulations');
     }
 
     return ChangeNotifierProvider.value(
       value: enemyManagerViewModel.currentEnemy,
-      child: widget,
+      child: enemyManagerViewModel.currentEnemy != null ? EnemyWidget() : CircularProgressIndicator(),
     );
   }
 }

@@ -1,5 +1,3 @@
-import 'package:clcker/models/leaderboard_enemy_model.dart';
-
 import '../models/leaderboard_model.dart';
 import '../models/leaderboard_player_model.dart';
 import '../services/api_service.dart';
@@ -12,15 +10,12 @@ class LeaderboardService extends ApiService {
       final dynamic data = await get('players/leaderboard?page=$page&per_page=$perPage');
       if (data != null) {
         List<LeaderboardPlayerModel> players = (data['players'] as List).map((p) {
-          final enemyData = p['enemy'] != null
-              ? LeaderboardEnemyModel(p['enemy']['id'], p['enemy']['name'])
-              : null;
           return LeaderboardPlayerModel(
             p['id'],
             p['username'],
             p['exp'],
             p['gold'],
-            enemyData,
+            p['enemy']['name'],
             p['rank'],
           );
         }).toList();

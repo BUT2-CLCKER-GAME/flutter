@@ -65,7 +65,7 @@ class UpgradeService extends ApiService {
       final dynamic data = await post('players/me/upgrades/$upgradeId', null, token: token);
 
       if (data != null) {
-        return data['cost'] as int?;
+        return data['cost'].round();
       }
     }
     catch (e) {

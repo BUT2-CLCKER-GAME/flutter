@@ -1,5 +1,6 @@
 import 'package:clcker/viewmodels/leaderboard_view_model.dart';
 import 'package:clcker/viewmodels/settings_view_model.dart';
+import 'package:clcker/views/congratulations.dart';
 import 'package:clcker/views/leaderboard_view.dart';
 import 'package:clcker/views/settings_view.dart';
 import 'package:clcker/views/register_view.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/leaderboard': (context) => LeaderboardView(),
         '/settings': (context) => SettingsView(),
         '/signup': (context) => RegisterView(),
+        '/congratulations': (context) => CongratulationsPage(),
       },
       debugShowCheckedModeBanner: false,
     );

@@ -10,17 +10,19 @@ class EnemyManagerViewModel extends ChangeNotifier {
   final EnemyManagerModel _enemyManagerModel;
   EnemyViewModel? _currentEnemy;
 
+  bool _end = false;
+
   late Timer _autoClickerTimer;
-  double clicksBuffer = 0.0;
+  double _clicksBuffer = 0.0;
 
   EnemyManagerViewModel(this._player) : _enemyManagerModel = EnemyManagerModel() {
     _initEnemy();
     _autoClickerTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-      clicksBuffer += _player.clicksPerSecond / 10;
-      int clicksToPerform = clicksBuffer.floor();
+      _clicksBuffer += _player.clicksPerSecond / 10;
+      int clicksToPerform = _clicksBuffer.floor();
       if (clicksToPerform > 0) {
         onClick(clicksToPerform);
-        clicksBuffer -= clicksToPerform;
+        _clicksBuffer -= clicksToPerform;
       }
     });
   }
@@ -31,15 +33,10 @@ class EnemyManagerViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  void _initEnemy() async {
-    _currentEnemy = EnemyViewModel(await _enemyManagerModel.currentEnemy);
-    notifyListeners();
-  }
-
+  bool get end => _end;
   EnemyViewModel? get currentEnemy => _currentEnemy;
 
-  void updateOnEnemyId() async {
-    _enemyManagerModel.updateOnEnemyId();
+  void _initEnemy() async {
     _currentEnemy = EnemyViewModel(await _enemyManagerModel.currentEnemy);
     notifyListeners();
   }
@@ -57,7 +54,12 @@ class EnemyManagerViewModel extends ChangeNotifier {
 
     if (lastId != _enemyManagerModel.currentEnemyId) {
       _player.addGold((maxHealth * _player.goldMultiplier).round());
-      _initEnemy();
+      if (_enemyManagerModel.currentEnemyId <= 30) {
+        _initEnemy();
+      }
+      else {
+        _end = true;
+      }
     }
   }
 }
