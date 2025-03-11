@@ -10,12 +10,12 @@ class EnemyManagerViewModel extends ChangeNotifier {
   final EnemyManagerModel _enemyManagerModel;
   EnemyViewModel? _currentEnemy;
 
-  late Timer autoClickerTimer;
+  late Timer _autoClickerTimer;
   double clicksBuffer = 0.0;
 
   EnemyManagerViewModel(this._player) : _enemyManagerModel = EnemyManagerModel() {
     _initEnemy();
-    autoClickerTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    _autoClickerTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       clicksBuffer += _player.clicksPerSecond / 10;
       int clicksToPerform = clicksBuffer.floor();
       if (clicksToPerform > 0) {
@@ -25,12 +25,24 @@ class EnemyManagerViewModel extends ChangeNotifier {
     });
   }
 
+  @override
+  void dispose() {
+    _autoClickerTimer.cancel();
+    super.dispose();
+  }
+
   void _initEnemy() async {
     _currentEnemy = EnemyViewModel(await _enemyManagerModel.currentEnemy);
     notifyListeners();
   }
 
   EnemyViewModel? get currentEnemy => _currentEnemy;
+
+  void updateOnEnemyId() async {
+    _enemyManagerModel.updateOnEnemyId();
+    _currentEnemy = EnemyViewModel(await _enemyManagerModel.currentEnemy);
+    notifyListeners();
+  }
 
   void onClick(int clicks) {
     _takeDamage(clicks);

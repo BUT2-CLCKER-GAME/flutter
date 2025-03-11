@@ -15,12 +15,6 @@ class SettingsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Paramètres'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/game');
-          },
-        ),
       ),
       body: Center(
         child: Padding(
@@ -37,9 +31,12 @@ class SettingsView extends StatelessWidget {
               ),
               SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {
-                  settings.disconnect();
-                  Navigator.pushReplacementNamed(context, '/');
+                onPressed: () async {
+                  await settings.disconnect();
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    Navigator.pushReplacementNamed(context, '/login');
+                  }
                 },
                 child: Text('Deconnexion'),
               ),

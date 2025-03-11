@@ -15,13 +15,14 @@ class UpgradeViewModel extends ChangeNotifier {
   int get level => _upgrade.level;
 
   void click(PlayerViewModel player) {
-    if (player.deductGold(_upgrade.price)) {
+    if (player.gold > _upgrade.price) {
       if (_upgrade.level == 0) {
         _upgrade.buy();
       }
       else {
         _upgrade.upgrade();
       }
+      player.deductGold(_upgrade.price);
     }
     notifyListeners();
   }

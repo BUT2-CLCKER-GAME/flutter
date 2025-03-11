@@ -5,7 +5,7 @@ class PlayerModel {
   final PlayerService _playerService;
 
   final String _name;
-  double _experience;
+  int _experience;
   int _gold;
   final List<UpgradeModel> _upgrades;
 
@@ -20,7 +20,7 @@ class PlayerModel {
   String get token => _playerService.token;
 
   String get name => _name;
-  double get experience => _experience;
+  int get experience => _experience;
   int get gold => _gold;
   List<UpgradeModel> get upgrades => _upgrades;
 
@@ -71,7 +71,7 @@ class PlayerModel {
 
   void addExperience(double amount) {
     if (amount >= 0.0) {
-      _experience += amount * _experienceMultiplier;
+      _experience += (amount * _experienceMultiplier).round();
     }
   }
 }

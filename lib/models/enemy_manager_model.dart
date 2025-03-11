@@ -13,7 +13,13 @@ class EnemyManagerModel {
   }
 
   Future<EnemyModel> get currentEnemy async => (await _currentEnemy)!;
+
   int get currentEnemyId => _currentEnemyId;
+
+  void updateOnEnemyId() {
+    _currentEnemyId = PlayerService.getInstance().enemyId;
+    _currentEnemy = _enemyService.fetchEnemy(_currentEnemyId);
+  }
 
   Future<int> get maxHealth async => (await _currentEnemy)!.maxHealth;
 

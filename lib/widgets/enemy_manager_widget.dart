@@ -9,7 +9,7 @@ class EnemyManagerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EnemyManagerViewModel enemyManagerViewModel = context.watch<EnemyManagerViewModel>();
+    EnemyManagerViewModel enemyManagerViewModel = Provider.of<EnemyManagerViewModel>(context);
 
     Widget widget;
     if (enemyManagerViewModel.currentEnemy != null) {

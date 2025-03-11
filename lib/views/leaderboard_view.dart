@@ -14,12 +14,6 @@ class LeaderboardView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Leaderboard'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/game');
-          },
-        ),
       ),
       body: Column(
         children: [

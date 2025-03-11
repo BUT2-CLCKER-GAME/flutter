@@ -31,16 +31,20 @@ class RegisterView extends StatelessWidget {
 
     bool success = await PlayerService.getInstance(username, password).register(username, password);
 
-    Navigator.pop(context);
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
 
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Compte créé avec succès. Connectez-vous !')),
-      );
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de la création du compte')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Compte créé avec succès. Connectez-vous !')),
+        );
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur lors de la création du compte')),
+        );
+      }
     }
   }
 

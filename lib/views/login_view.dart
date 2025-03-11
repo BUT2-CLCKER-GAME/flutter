@@ -30,6 +30,7 @@ class _LoginViewState extends State<LoginView> {
       if (mounted) {
         PlayerViewModel playerViewModel = Provider.of<PlayerViewModel>(context, listen: false);
         if (await playerViewModel.initPlayerToken(token) && mounted) {
+
           Navigator.pushReplacementNamed(context, '/game');
           return;
         }

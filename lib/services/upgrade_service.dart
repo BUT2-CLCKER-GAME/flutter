@@ -15,13 +15,13 @@ class UpgradeService extends ApiService {
   UpgradeModel? _dataToUpgrade(dynamic data) {
     switch (data['type']['id']) {
       case 1:
-        return DamageMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase'].toDouble());
+        return DamageMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase']);
       case 2:
-        return ExperienceMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase'].toDouble());
+        return ExperienceMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase']);
       case 3:
         return AutoclckerUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase']);
       case 4:
-        return GoldMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase'].toDouble());
+        return GoldMultiplierUpgradeModel(_player, data['id'], data['type']['id'], data['name'], data['description'], data['exp_required'], data['level'], data['cost'].round(), data['increase']);
     }
     return null;
   }

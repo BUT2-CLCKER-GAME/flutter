@@ -8,7 +8,7 @@ import 'api_service.dart';
 class PlayerService extends ApiService {
   static PlayerService? _instance;
 
-  late final UpgradeService _upgradeService;
+  late UpgradeService _upgradeService;
 
   final String _username;
   final String _password;
@@ -19,18 +19,18 @@ class PlayerService extends ApiService {
   PlayerService._internal(this._token, this._username, this._password);
 
   static PlayerService getInstance([String? token, String? username, String? password]) {
-    if (_instance == null) {
-      if (token != null) {
-        _instance = PlayerService._internal(token, '', '');
-      }
-      else {
-        if (username == null || password == null) {
-          throw Exception("PlayerService n'a pas encore été initialisé avec un playerId.");
-        }
-        _instance = PlayerService._internal(null, username, password);
-      }
+    if (username != null || password != null) {
+      _instance = PlayerService._internal(null, username!, password!);
     }
-    return _instance!;
+    else if (token != null) {
+      _instance = PlayerService._internal(token, '', '');
+    }
+
+    if (_instance != null) {
+      return _instance!;
+    }
+
+    throw Exception('Access uninitialized PlayerService is impossible');
   }
 
   UpgradeService get upgradeService => _upgradeService;
@@ -92,7 +92,7 @@ class PlayerService extends ApiService {
       if (data != null) {
         _enemyId = data['current_enemy_id'];
 
-        PlayerModel player = PlayerModel(this, data['username'], data['exp'].toDouble(), data['gold']);
+        PlayerModel player = PlayerModel(this, data['username'], data['exp'], data['gold']);
         _upgradeService = UpgradeService(player);
         await _upgradeService.fetchUpgrades(_token!);
 
@@ -106,7 +106,7 @@ class PlayerService extends ApiService {
     return null;
   }
 
-  Future<void> updatePlayer({int? currentEnemyId, int? gold, double? experience, List<UpgradeModel>? upgrades}) async {
+  Future<void> updatePlayer({int? currentEnemyId, int? gold, int? experience, List<UpgradeModel>? upgrades}) async {
     try {
       await patch('players/me', {
         if (currentEnemyId != null) "current_enemy_id": currentEnemyId,
@@ -119,8 +119,7 @@ class PlayerService extends ApiService {
     }
   }
 
-  void disconnect() {
-    StorageService.deleteToken();
-    _instance = null;
+  Future<void> disconnect() async {
+    await StorageService.deleteToken();
   }
 }

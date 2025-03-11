@@ -6,7 +6,6 @@ import 'package:clcker/views/register_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'viewmodels/enemy_manager_view_model.dart';
 import 'viewmodels/player_view_model.dart';
 import 'views/game_view.dart';
 import 'views/login_view.dart';
@@ -18,7 +17,6 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => player),
-        ChangeNotifierProvider(create: (context) => EnemyManagerViewModel(player)),
         ChangeNotifierProvider(create: (context) => LeaderboardViewModel()),
         ChangeNotifierProvider(create: (context) => SettingsViewModel())
       ],
@@ -34,9 +32,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Clcker Game',
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => LoginView(),
+        '/login': (context) => LoginView(),
         '/game': (context) => GameView(),
         '/leaderboard': (context) => LeaderboardView(),
         '/settings': (context) => SettingsView(),

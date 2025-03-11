@@ -8,7 +8,7 @@ class SettingsViewModel extends ChangeNotifier {
     _service = PlayerService.getInstance();
   }
 
-  void disconnect() {
-      _service.disconnect();
+  Future<void> disconnect() async {
+    await _service.disconnect();
   }
 }

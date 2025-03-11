@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../viewmodels/enemy_manager_view_model.dart';
 import '../widgets/enemy_manager_widget.dart';
 import '../widgets/shop_widget.dart';
 import '../viewmodels/player_view_model.dart';
@@ -85,14 +86,14 @@ class _GameViewState extends State<GameView> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/settings');
+                                    Navigator.pushNamed(context, '/settings');
                                   },
                                   child: const Icon(Icons.settings),
                                 ),
                                 const SizedBox(height: 8),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/leaderboard');
+                                    Navigator.pushNamed(context, '/leaderboard');
                                   },
                                   child: const Icon(Icons.leaderboard),
                                 ),
@@ -103,7 +104,10 @@ class _GameViewState extends State<GameView> {
                       ),
                       Expanded(
                         child: Center(
-                          child: const EnemyManagerWidget(),
+                          child: ChangeNotifierProvider(
+                            create: (context) => EnemyManagerViewModel(player),
+                            child: const EnemyManagerWidget(),
+                          ),
                         ),
                       ),
                       displayStats(player),
