@@ -1,11 +1,37 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodels/enemy_manager_view_model.dart';
 import '../viewmodels/enemy_view_model.dart';
 
-class EnemyWidget extends StatelessWidget {
+class EnemyWidget extends StatefulWidget {
   const EnemyWidget({super.key});
+
+  @override
+  _EnemyWidgetState createState() => _EnemyWidgetState();
+}
+
+class _EnemyWidgetState extends State<EnemyWidget> {
+  double _shakeOffset = 0.0;
+
+  void _startShake() {
+    int count = 0;
+    Timer.periodic(Duration(milliseconds: 50), (timer) {
+      setState(() {
+        _shakeOffset = (count % 2 == 0) ? 5.0 : -5.0;
+      });
+      count++;
+
+      if (count > 4) {
+        timer.cancel();
+        setState(() {
+          _shakeOffset = 0.0;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +50,7 @@ class EnemyWidget extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 32),
 
           Stack(
             children: [
@@ -43,15 +69,21 @@ class EnemyWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 32),
 
           GestureDetector(
-            onTap: () => enemyManagerViewModel.onClick(1),
-            child: Image.asset(
-              enemyViewModel.imageUrl,
-              height: 100,
-              width: 100,
-              fit: BoxFit.cover,
+            onTap: () {
+              _startShake();
+              enemyManagerViewModel.onClick(1);
+            },
+            child: Transform.translate(
+              offset: Offset(_shakeOffset, 0),
+              child: Image.asset(
+                enemyViewModel.imageUrl,
+                height: 100,
+                width: 100,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],

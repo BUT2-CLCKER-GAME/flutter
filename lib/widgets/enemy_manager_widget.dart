@@ -15,9 +15,28 @@ class EnemyManagerWidget extends StatelessWidget {
       Navigator.pushReplacementNamed(context, '/congratulations');
     }
 
-    return ChangeNotifierProvider.value(
-      value: enemyManagerViewModel.currentEnemy,
-      child: enemyManagerViewModel.currentEnemy != null ? EnemyWidget() : CircularProgressIndicator(),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Center(
+            child: Transform.translate(
+              offset: Offset(0, 40),
+              child: Image.asset(
+                'assets/background.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+        Center(
+          child: ChangeNotifierProvider.value(
+            value: enemyManagerViewModel.currentEnemy,
+            child: enemyManagerViewModel.currentEnemy != null
+                ? EnemyWidget()
+                : CircularProgressIndicator(),
+          ),
+        ),
+      ],
     );
   }
 }
